@@ -86,6 +86,16 @@ body {
   background-repeat: no-repeat;
 }
 
+#top_images div:first-child {
+  background-image: url(../media/geo_images/argentina_normal_1.jpg);
+}
+#top_images div:nth-child(2) {
+  background-image: url(../media/geo_images/chile_normal_3.jpg);
+}
+#top_images div:nth-child(3) {
+  background-image: url(../media/geo_images/france_normal_3.jpg);
+}
+
 #top_text {
   position: relative;
   z-index: 10;
