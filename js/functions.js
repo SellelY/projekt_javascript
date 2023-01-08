@@ -203,6 +203,24 @@ function create_programme (programme) {
 // CODE according to the specification
 function update_programmes () {
 
+  const programme_element = document.createElement("div");
+
+  programme_element.classList.add("programme");
+  programme_element.innerHTML = `
+  <div>
+    <h3>${programme.name}</h3>
+    <p>${UNIVERSITIES[programme.universityID].name}</p>
+    <p>${CITIES[UNIVERSITIES[programme.universityID].cityID].name}, ${COUNTRIES[CITIES[UNIVERSITIES[programme.universityID].cityID].countryID].name}</p>
+    <p>${UNIVERSITIES[programme.universityID].name}</p>
+  </div>
+  
+  <div class="bottom_programme"> 
+    <p>${CITIES[UNIVERSITIES[programme.universityID].cityID].name}, sun-index: ${CITIES[UNIVERSITIES[programme.universityID].cityID].sun}</p> 
+  </div>
+ `;
+
+ document.querySelector("#programmes > ul").appendChild(programme_element);
+
   /*
       NO ARGUMENTS
 
