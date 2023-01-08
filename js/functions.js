@@ -3,6 +3,11 @@
 // CODE According to specification
 function click_filter_element (event) {
 
+  const filter_dom = event.currentTarget;
+  filter_dom.classList.toggle("selected");
+
+  update_programmes();
+
   /*
     ARGUMENTS
       event: event-object created when user clicks on one of the filter elements.
@@ -104,7 +109,39 @@ function toggle_cities (event) {
 // ATTENTION: You need to write the specification of all three functions:
 //            create_countries_cities_filters, create_country and create_city
 function create_countries_cities_filters () {
+
+  /*
+    ARGUMENT:
+      Denna funktion tar inga argument.
+    BIEFFEKTER:
+      Den här funktionen skapar en lista över country filter och city filter i DOM.
+      Country filtren finns i ett "div"-element med klassen "country" och ID:t "country_<country.id>".
+      City filtren finns i ett "ul"-element inom "div"-elementet för motsvarande land.
+      City filtren skapas genom att anropa funktionen "create_city" för varje stad i arrayen "CITIES".
+      Country filtren och city filtren läggs till i elementet "#country_filter > ul" i DOM.
+    RETURVÄRDE:
+      Funktionen returnerar inget värde.
+  */
+
   function create_country (country) {
+
+    /*
+      ARGUMENT:
+        land: ett objekt som representerar ett land, med följande nycklar:
+          id: landets ID
+          name : namnet på landet
+ 
+      BIEFFEKTER:
+        Denna funktion skapar ett country filter i DOM.
+        country filtret är ett "div"-element med klassen "country" och ID:t "country_<country.id>".
+        country filtret innehåller ett "h1"-element med textinnehållet "country.name" och ett "u"`-element.
+        Elementet "ul" används för att innehålla city filtren för detta land.
+        country filtret läggs till i elementet "#country_filter > ul" i DOM.
+ 
+      RETURVÄRDE:
+        Denna funktion returnerar inget värde.
+    */
+
     const dom = document.createElement("div");
     dom.classList.add("country");
     dom.classList.add("filter_container");
@@ -124,6 +161,21 @@ function create_countries_cities_filters () {
     array_each(cities, create_city);
   }
   function create_city (city) {
+
+    /*
+      ARGUMENT:
+        stad: ett objekt som representerar en stad, med följande nycklar:
+          id: stadens ID
+          countryID: ID för det land som staden tillhör
+          name: namnet på staden
+      BIEFFEKTER:
+        Denna funktion skapar ett city filter i DOM.
+        city filtret är ett "li"-element med klassen "selected" och data attribute "data-id" satt till "city.id".
+        city filtret har textinnehållet "city.name".
+        city filtret läggs till "ul"-elementet inom "div"-elementet för motsvarande land (bestäms av "city.countryID").
+      RETURVÄRDE:
+        Denna funktion returnerar inget värde.
+    */
 
     const dom = create_filter_element({
       parent: document.querySelector(`#country_${city.countryID} > ul`),
@@ -176,6 +228,40 @@ function create_language_filter () {
     dom.dataset.id = data.id;
   }
   array_each(LANGUAGES, create_element);
+}
+
+function create_filter(items, filter_type) {
+
+  /*
+    ARGUMENT:
+      items: en array av objects, som vart och ett representerar ett item som ska filtreras, med följande keys:
+        id: items ID
+        name: namnet på item
+      filterType: en sträng som representerar typen av filter som ska skapas (t.ex. "level", "subject", "language")
+
+    BIEFFEKTER:
+      Denna funktion skapar en lista med filterelement i DOM.
+      Varje filterelement är ett "li" element med klassen "selected" och data attribute "data-id" inställt på motsvarande items ID.
+      Filterelementet har textinnehållet för motsvarande items namn.
+      Filterelementen läggs till i elementet "#<filterType>_filter > ul" i DOM.
+
+    RETURVÄRDE:
+      Denna funktion returnerar inget värde.
+  */
+
+  const filter_container = document.querySelector(`#${filter_type}_filter > ul`);
+
+  items.forEach(item => {
+    const filter_element = document.createElement("li");
+
+    filter_element.classList.add("selected");
+
+    filter_element.dataset.id = item.id;
+
+    filter_element.textContent = item.name;
+
+    filter_container.appendChild(filter_element);
+  });
 }
 
 
@@ -254,6 +340,29 @@ function update_programmes () {
 // Optional VG: Which parts of the function's code could be abstracted?
 //              Implement it
 function read_filters () {
+
+  /*
+ARGUMENT:
+      Denna funktion tar inga argument.
+
+    BIEFFEKTER:
+
+      Den här funktionen läser det aktuella tillståndet för filterelementen i DOM och returnerar en array av program som ska visas baserat på de valda filtren.
+      Specifikt gör den följande:
+      1. Läser de valda city filter elements och får deras ID.
+      2. Hittar universities i dessa cities och får deras ID.
+      3. Hittar de program som erbjuds av dessa universities och lagrar dem i en array.
+      4. Läser de valda selected level filter elements och får deras ID.
+      5. Filtrerar programmes så att den endast inkluderar program med ett level ID som ingår i de valda level ID.
+      6. Läser de valda language filter elements och får deras ID.
+      7. Filtrerar programmes array så att den endast inkluderar program med ett language ID som ingår i de valda language ID.
+      8. Läser de valda subject filter elements och får deras ID.
+      9. Filtrerar programmes array så att den endast inkluderar program med ett subject ID som ingår i de valda subject ID.
+      10. Läser värdet(value) på sökfältet och filtrerar programmes array så att den bara inkluderar program med ett namn som innehåller search string (söksträngen).
+
+    RETURVÄRDE:
+      Den här funktionen returnerar en uppsättning program som ska visas baserat på de valda filtren.
+*/
   
   const city_selected_dom = document.querySelectorAll("#country_filter li.selected");
 
