@@ -268,6 +268,24 @@ function create_filter(items, filter_type) {
 // G / VG (see details in specification)
 // CODE according to specifications
 function create_programme (programme) {
+
+  const programme_element = document.createElement("div");
+
+  programme_element.classList.add("programme");
+  programme_element.innerHTML = `
+  <div>
+    <h3>${programme.name}</h3>
+    <p>${UNIVERSITIES[programme.universityID].name}</p>
+    <p>${CITIES[UNIVERSITIES[programme.universityID].cityID].name}, ${COUNTRIES[CITIES[UNIVERSITIES[programme.universityID].cityID].countryID].name}</p>
+    <p>${UNIVERSITIES[programme.universityID].name}</p>
+  </div>
+  
+  <div class="bottom_programme"> 
+    <p>${CITIES[UNIVERSITIES[programme.universityID].cityID].name}, sun-index: ${CITIES[UNIVERSITIES[programme.universityID].cityID].sun}</p> 
+  </div>
+ `;
+
+ document.querySelector("#programmes > ul").appendChild(programme_element);
   
   /*
 
@@ -297,23 +315,18 @@ function create_programme (programme) {
 // CODE according to the specification
 function update_programmes () {
 
-  const programme_element = document.createElement("div");
+  const update_programmes_box = document.querySelector("#programmes > ul");
+  update_programmes_box.innerHTML = ``;
 
-  programme_element.classList.add("programme");
-  programme_element.innerHTML = `
-  <div>
-    <h3>${programme.name}</h3>
-    <p>${UNIVERSITIES[programme.universityID].name}</p>
-    <p>${CITIES[UNIVERSITIES[programme.universityID].cityID].name}, ${COUNTRIES[CITIES[UNIVERSITIES[programme.universityID].cityID].countryID].name}</p>
-    <p>${UNIVERSITIES[programme.universityID].name}</p>
-  </div>
-  
-  <div class="bottom_programme"> 
-    <p>${CITIES[UNIVERSITIES[programme.universityID].cityID].name}, sun-index: ${CITIES[UNIVERSITIES[programme.universityID].cityID].sun}</p> 
-  </div>
- `;
-
- document.querySelector("#programmes > ul").appendChild(programme_element);
+  let programmes = read_filters();
+  if(programmes.length !== 0) {
+    let text = document.querySelector("#programmes > p");
+    text.innerHTML = ``;
+  } else {
+    let text = document.querySelector("#programmes > p");
+    text.innerHTML = `Inga program uppfyller nuvarande filter.`;
+  }
+  array_each(programmes, create_programme);
 
   /*
       NO ARGUMENTS
